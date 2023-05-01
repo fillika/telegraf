@@ -1,10 +1,5 @@
 package telegraf
 
-import (
-	"log"
-	"net/http"
-)
-
 const (
 	telegram_api = "https://api.telegram.org/bot"
 )
@@ -19,15 +14,18 @@ var methods = Methods{
 	getUpdates: "getUpdates",
 }
 
-func CreateNewBot(token string) *http.Response {
+func CreateNewBot(token string) (*BotAPI, error) {
 	url := createUrlWithTokenAndMethod(token, methods.getUpdates)
 
-	response, err := makeRequest(url, []byte(""))
+	_, err := makeRequest(url, []byte(""))
 
 	if err != nil {
-		// sure?
-		log.Fatal(err)
+		return nil, err
 	}
 
-	return response
+	BotAPI := BotAPI{
+		token: token,
+	}
+
+	return &BotAPI, nil
 }

@@ -9,18 +9,23 @@ import (
 func TestCreateNewBot(t *testing.T) {
 	token, _ := os.ReadFile(".env")
 
-	res := CreateNewBot(string(token))
+	_, err := CreateNewBot(string(token))
 
-	if res.StatusCode != 200 {
-		t.Error("Test failed. Status code isn't 200: ", res.StatusCode)
+	if err != nil {
+		t.Error("Test 'TestCreateNewBot' failed")
 	}
-
-	// todo delete it later
-	fmt.Println("response: ", res)
 }
 
 func Test_getUpdates(t *testing.T) {
-	response, err := getUpdates()
+	token, _ := os.ReadFile(".env")
+
+	bot, _ := CreateNewBot(string(token))
+
+	if bot == nil {
+		t.Error("Test failed. Bot is nil")
+	}
+
+	response, err := getUpdates(bot)
 
 	if err != nil {
 		t.Error("Test failed. Error: ", err)

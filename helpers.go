@@ -7,7 +7,6 @@ import (
 	"io"
 	"net/http"
 	"net/url"
-	"os"
 	"time"
 )
 
@@ -16,7 +15,7 @@ func createUrlWithTokenAndMethod(token string, method string) string {
 	return url
 }
 
-// this medthod make only POST requests
+// this method make only POST requests
 func makeRequest(url string, jsonStr []byte) (response *http.Response, err error) {
 	ctx, cancel := context.WithTimeout(context.Background(), time.Second*10)
 	defer cancel()
@@ -34,14 +33,8 @@ func makeRequest(url string, jsonStr []byte) (response *http.Response, err error
 }
 
 // todo decide how to create a common method for all requests
-func getUpdates() (*http.Response, error) {
-	token, err := os.ReadFile(".env")
-
-	if err != nil {
-		return nil, err
-	}
-
-	createdUrl := createUrlWithTokenAndMethod(string(token), methods.getUpdates)
+func getUpdates(bot *BotAPI) (*http.Response, error) {
+	createdUrl := createUrlWithTokenAndMethod(bot.token, methods.getUpdates)
 
 	params := url.Values{}
 	params.Set("offset", "0")
