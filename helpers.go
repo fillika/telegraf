@@ -66,10 +66,16 @@ func makeRequest(url string, jsonStr []byte) (response *ApiResponse, err error) 
 	return result, nil
 }
 
-func getUpdates(bot *BotAPI) (*ApiResponse, error) {
+func getUpdates(bot *BotAPI, config UpdatesConfig) (*ApiResponse, error) {
 	url := createUrlWithTokenAndMethod(bot.token, methods.getUpdates)
 
-	response, err := makeRequest(url, []byte(""))
+	bytes, err := json.Marshal(config)
+
+	if err != nil {
+		return nil, err
+	}
+
+	response, err := makeRequest(url, bytes)
 
 	if err != nil {
 		return nil, err

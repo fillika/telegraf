@@ -20,7 +20,7 @@ func (b *BotAPI) GetUpdatesChannel(config UpdatesConfig) (chan *Update, error) {
 
 	go func() {
 		for {
-			response, err := getUpdates(b)
+			response, err := getUpdates(b, config)
 
 			if err != nil {
 				log.Println(err)
@@ -37,11 +37,14 @@ func (b *BotAPI) GetUpdatesChannel(config UpdatesConfig) (chan *Update, error) {
 				panic(err)
 			}
 
+			// As I can understand fonr the documentation I send offset as a parameter
+			// and Telegram API decide which updates to send me
+			// more detail here https://core.telegram.org/bots/api#getupdates
 			for _, update := range decodedResponse {
 				if update.UpdateID >= config.Offset {
-					config.Offset = config.Offset + 1
+					config.Offset = update.UpdateID + 1
+					updates <- update
 				}
-				updates <- update
 			}
 		}
 	}()

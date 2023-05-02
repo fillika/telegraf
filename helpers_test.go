@@ -29,7 +29,9 @@ func Test_getMe(t *testing.T) {
 }
 
 func Test_getUpdates(t *testing.T) {
-	_, err := getUpdates(bot)
+	config := UpdatesConfig{Offset: 0}
+
+	_, err := getUpdates(bot, config)
 
 	if err != nil {
 		t.Error("Error while getting updates")

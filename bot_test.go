@@ -1,7 +1,6 @@
 package telegraf
 
 import (
-	"fmt"
 	"os"
 	"strconv"
 	"testing"
@@ -36,7 +35,6 @@ func TestGetUpdatesChannel(t *testing.T) {
 	}
 }
 
-
 func TestSendMessage(t *testing.T) {
 	data, err := os.ReadFile("chat-id.env")
 
@@ -47,8 +45,8 @@ func TestSendMessage(t *testing.T) {
 	}
 
 	_, err = botApi.SendMessage(MessageConfig{
-		ChatID:  chatID,
-		Text:    "Hello, world!",
+		ChatID: chatID,
+		Text:   "Hello, world!",
 	})
 
 	if err != nil {
