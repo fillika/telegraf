@@ -5,27 +5,23 @@ const (
 )
 
 type Methods struct {
-	getMe      string
-	getUpdates string
+	getMe,
+	getUpdates,
+	sendMessage string
 }
 
 var methods = Methods{
-	getMe:      "getMe",
-	getUpdates: "getUpdates",
+	getMe:       "getMe",
+	getUpdates:  "getUpdates",
+	sendMessage: "sendMessage",
 }
 
 func CreateNewBot(token string) (*BotAPI, error) {
-	url := createUrlWithTokenAndMethod(token, methods.getUpdates)
-
-	_, err := makeRequest(url, []byte(""))
+	bot, err := getMe(token)
 
 	if err != nil {
-		return nil, err
+		return &BotAPI{}, err
 	}
 
-	BotAPI := BotAPI{
-		token: token,
-	}
-
-	return &BotAPI, nil
+	return bot, nil
 }

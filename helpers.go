@@ -6,7 +6,6 @@ import (
 	"encoding/json"
 	"io"
 	"net/http"
-	"net/url"
 	"time"
 )
 
@@ -15,13 +14,35 @@ func createUrlWithTokenAndMethod(token string, method string) string {
 	return url
 }
 
+func getMe(token string) (*BotAPI, error) {
+	url := createUrlWithTokenAndMethod(token, methods.getMe)
+
+	apiResponse, err := makeRequest(url, []byte(""))
+
+	if err != nil {
+		return &BotAPI{}, err
+	}
+
+	var user User
+	err = json.Unmarshal(apiResponse.Result, &user)
+
+	if err != nil {
+		return &BotAPI{}, err
+	}
+
+	return &BotAPI{
+		token: token,
+		user:  user,
+	}, nil
+}
+
 // this method make only POST requests
-func makeRequest(url string, jsonStr []byte) (response *http.Response, err error) {
+func makeRequest(url string, jsonStr []byte) (response *ApiResponse, err error) {
 	ctx, cancel := context.WithTimeout(context.Background(), time.Second*10)
 	defer cancel()
 
 	req, _ := http.NewRequestWithContext(ctx, "POST", url, bytes.NewBuffer(jsonStr))
-	req.Header.Set("Content-Type", "application/x-www-form-urlencoded")
+	req.Header.Set("Content-Type", "application/json")
 
 	resp, err := http.DefaultClient.Do(req)
 
@@ -29,20 +50,26 @@ func makeRequest(url string, jsonStr []byte) (response *http.Response, err error
 		return nil, err
 	}
 
-	return resp, nil
+	result, err := decodeResponse(resp)
+
+	if err != nil {
+		return nil, err
+	}
+
+	if !result.Ok {
+		return nil, &ApiError{
+			Code:    result.ErrorCode,
+			Message: result.Description,
+		}
+	}
+
+	return result, nil
 }
 
-// todo decide how to create a common method for all requests
-func getUpdates(bot *BotAPI) (*http.Response, error) {
-	createdUrl := createUrlWithTokenAndMethod(bot.token, methods.getUpdates)
+func getUpdates(bot *BotAPI) (*ApiResponse, error) {
+	url := createUrlWithTokenAndMethod(bot.token, methods.getUpdates)
 
-	params := url.Values{}
-	params.Set("offset", "0")
-	params.Set("limit", "100")
-	params.Set("timeout", "50")
-	params.Set("allowed_updates", "[]")
-
-	response, err := makeRequest(createdUrl, []byte(""))
+	response, err := makeRequest(url, []byte(""))
 
 	if err != nil {
 		return nil, err
@@ -51,17 +78,21 @@ func getUpdates(bot *BotAPI) (*http.Response, error) {
 	return response, nil
 }
 
-func decodeResponse(response *http.Response) ([]*Update, error) {
+func decodeResponse(response *http.Response) (*ApiResponse, error) {
 	data, err := io.ReadAll(response.Body)
 
 	if err != nil {
 		return nil, err
 	}
 
-	result := &Response{}
+	result := ApiResponse{}
 
-	err = json.Unmarshal(data, result)
+	err = json.Unmarshal(data, &result)
+
+	if err != nil {
+		return nil, err
+	}
 
 	response.Body.Close()
-	return result.Result, err
+	return &result, err
 }
