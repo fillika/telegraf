@@ -17,7 +17,7 @@ func TestMain(m *testing.M) {
 		panic(err)
 	}
 
-	botApi, err = CreateNewBot(string(token))
+	botApi, err = NewBot(string(token))
 
 	if err != nil {
 		panic(err)
