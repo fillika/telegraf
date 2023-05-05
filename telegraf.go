@@ -26,8 +26,8 @@ func NewBot(token string) (*BotAPI, error) {
 	return bot, nil
 }
 
-// This method create a MessageConfig for method sendMessage
-// If you want to set more properties you cam mutate this object
+// This method create a MessageConfig for method "sendMessage".
+// If you want to set more properties you cam mutate this object.
 // https://core.telegram.org/bots/api#sendmessage
 func NewMessage(chatID int, text string) *MessageConfig {
 	return &MessageConfig{
