@@ -11,24 +11,13 @@ type BotAPI struct {
 	user  User
 }
 
+// To get updates we need to send request with config
+// https://core.telegram.org/bots/api#getupdates
 type UpdatesConfig struct {
-	Offset int `json:"offset"`
-}
-
-// https://core.telegram.org/bots/api#copymessage
-func (b *BotAPI) CopyMessage(config CopyMessageConfig) (MessageID, error) {
-	url := createUrlWithTokenAndMethod(b.token, methods.copyMessage)
-	msgID, err := config.makeRequest(url)
-
-	return msgID, err
-}
-
-// https://core.telegram.org/bots/api#forwardmessage
-func (b *BotAPI) ForwardMessage(config ForwardMessageConfig) (Message, error) {
-	url := createUrlWithTokenAndMethod(b.token, methods.forwardMessage)
-	msg, err := config.makeRequest(url)
-
-	return msg, err
+	Offset         int      `json:"offset,omitempty"`
+	Limit          int      `json:"limit,omitempty"`
+	Timeout        int      `json:"timeout,omitempty"`
+	AllowedUpdates []string `json:"allowed_updates,omitempty"`
 }
 
 func (b *BotAPI) GetUpdatesChannel(config UpdatesConfig) (chan *Update, error) {
@@ -66,6 +55,22 @@ func (b *BotAPI) GetUpdatesChannel(config UpdatesConfig) (chan *Update, error) {
 	}()
 
 	return updates, nil
+}
+
+// https://core.telegram.org/bots/api#copymessage
+func (b *BotAPI) CopyMessage(config CopyMessageConfig) (MessageID, error) {
+	url := createUrlWithTokenAndMethod(b.token, methods.copyMessage)
+	msgID, err := config.makeRequest(url)
+
+	return msgID, err
+}
+
+// https://core.telegram.org/bots/api#forwardmessage
+func (b *BotAPI) ForwardMessage(config ForwardMessageConfig) (Message, error) {
+	url := createUrlWithTokenAndMethod(b.token, methods.forwardMessage)
+	msg, err := config.makeRequest(url)
+
+	return msg, err
 }
 
 // https://core.telegram.org/bots/api#sendmessage

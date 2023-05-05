@@ -14,8 +14,13 @@ Example for creating a bot and gets updates:
 func main() {
     token := "Your token"
     botAPI := telegraf.NewBot(token)
+    config := telegraf.UpdatesConfig{
+        Offset: 0,
+        Limit: 100,
+        Timeout: 60,
+    }
 
-    ch, err := botAPI.GetUpdatesChannel()
+    ch, err := botAPI.GetUpdatesChannel(config)
 
     if err != nil {
         // handle error
