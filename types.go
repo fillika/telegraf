@@ -74,6 +74,8 @@ type Update struct {
 	// 	ChatJoinRequest 	ChatJoinRequest	 `json:"chat_join_request"`
 }
 
+// Message represents a message.
+// https://core.telegram.org/bots/api#message
 type Message struct {
 	// todo create all fields from documentation
 	MessageID       int    `json:"message_id"`
@@ -85,6 +87,8 @@ type Message struct {
 	Text            string `json:"text"`
 }
 
+// User represents a Telegram user or bot.
+// https://core.telegram.org/bots/api#user
 // todo create all fields from documentation
 type User struct {
 	ID           int    `json:"id"`
@@ -95,6 +99,8 @@ type User struct {
 	LanguageCode string `json:"language_code"`
 }
 
+// Chat represents a chat.
+// https://core.telegram.org/bots/api#chat
 // todo create all fields from documentation
 type Chat struct {
 	ID        int    `json:"id"`
@@ -104,6 +110,8 @@ type Chat struct {
 	Type      string `json:"type"`
 }
 
+// MessageEntity represents one special entity in a text message.
+// https://core.telegram.org/bots/api#messageentity
 // todo
 type MessageEntity struct {
 }
