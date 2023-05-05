@@ -15,10 +15,18 @@ type UpdatesConfig struct {
 	Offset int `json:"offset"`
 }
 
+// https://core.telegram.org/bots/api#copymessage
+func (b *BotAPI) CopyMessage(config CopyMessageConfig) (MessageID, error) {
+	url := createUrlWithTokenAndMethod(b.token, methods.copyMessage)
+	msgID, err := config.makeRequest(url)
+
+	return msgID, err
+}
+
 // https://core.telegram.org/bots/api#forwardmessage
 func (b *BotAPI) ForwardMessage(config ForwardMessageConfig) (Message, error) {
 	url := createUrlWithTokenAndMethod(b.token, methods.forwardMessage)
-	msg, err := prepareParamsAndMakeRequest(url, config)
+	msg, err := config.makeRequest(url)
 
 	return msg, err
 }
@@ -63,7 +71,7 @@ func (b *BotAPI) GetUpdatesChannel(config UpdatesConfig) (chan *Update, error) {
 // https://core.telegram.org/bots/api#sendmessage
 func (b *BotAPI) SendMessage(config MessageConfig) (Message, error) {
 	url := createUrlWithTokenAndMethod(b.token, methods.sendMessage)
-	msg, err := prepareParamsAndMakeRequest(url, config)
+	msg, err := config.makeRequest(url)
 
 	return msg, err
 }

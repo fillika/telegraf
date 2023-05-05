@@ -7,6 +7,7 @@ import (
 )
 
 var botApi *BotAPI
+var chatID int
 
 func TestMain(m *testing.M) {
 	var err error
@@ -23,25 +24,33 @@ func TestMain(m *testing.M) {
 		panic(err)
 	}
 
+	data, _ := os.ReadFile("chat-id.env")
+	chatID, err = strconv.Atoi(string(data))
+
+	if err != nil {
+		panic(err)
+	}
+
 	// Call the other tests and exit with their status code
 	os.Exit(m.Run())
 }
 
-func TestForwardMessage(t *testing.T) {
-	data, err := os.ReadFile("chat-id.env")
+func TestCopyMessage(t *testing.T) {
+	msg := NewCopyMessage(chatID, chatID, 11)
+	msg.DisableNotification = true
 
-	chatID, _ := strconv.Atoi(string(data))
+	_, err := botApi.CopyMessage(msg)
 
 	if err != nil {
-		t.Error("Test 'ForwardMessage' failed. Error:", err)
+		t.Error("Test 'CopyMessage' failed", err)
 	}
+}
 
-	_, err = botApi.ForwardMessage(ForwardMessageConfig{
-		ChatID:              chatID,
-		FromChatID:          chatID,
-		MessageID:           10,
-		DisableNotification: true,
-	})
+func TestForwardMessage(t *testing.T) {
+	msg := NewForwardMessage(chatID, chatID, 10)
+	msg.DisableNotification = true
+
+	_, err := botApi.ForwardMessage(msg)
 
 	if err != nil {
 		t.Error("Test 'ForwardMessage' failed", err)
@@ -57,17 +66,9 @@ func TestGetUpdatesChannel(t *testing.T) {
 }
 
 func TestSendMessage(t *testing.T) {
-	data, err := os.ReadFile("chat-id.env")
-
-	chatID, _ := strconv.Atoi(string(data))
-
-	if err != nil {
-		t.Error("Test 'SendMessage' failed. Error:", err)
-	}
-
 	msg := NewMessage(chatID, "Hello, world!")
 
-	_, err = botApi.SendMessage(msg)
+	_, err := botApi.SendMessage(msg)
 
 	if err != nil {
 		t.Error("Test 'SendMessage' failed", err)
