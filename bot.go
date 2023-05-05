@@ -15,6 +15,14 @@ type UpdatesConfig struct {
 	Offset int `json:"offset"`
 }
 
+// https://core.telegram.org/bots/api#forwardmessage
+func (b *BotAPI) ForwardMessage(config ForwardMessageConfig) (Message, error) {
+	url := createUrlWithTokenAndMethod(b.token, methods.forwardMessage)
+	msg, err := prepareParamsAndMakeRequest(url, config)
+
+	return msg, err
+}
+
 func (b *BotAPI) GetUpdatesChannel(config UpdatesConfig) (chan *Update, error) {
 	updates := make(chan *Update, 100)
 
@@ -52,27 +60,10 @@ func (b *BotAPI) GetUpdatesChannel(config UpdatesConfig) (chan *Update, error) {
 	return updates, nil
 }
 
+// https://core.telegram.org/bots/api#sendmessage
 func (b *BotAPI) SendMessage(config MessageConfig) (Message, error) {
-	createdUrl := createUrlWithTokenAndMethod(b.token, methods.sendMessage)
+	url := createUrlWithTokenAndMethod(b.token, methods.sendMessage)
+	msg, err := prepareParamsAndMakeRequest(url, config)
 
-	bytes, err := json.Marshal(config)
-
-	if err != nil {
-		return Message{}, err
-	}
-
-	response, err := makeRequest(createdUrl, bytes)
-
-	if err != nil {
-		return Message{}, err
-	}
-
-	var msg Message
-	err = json.Unmarshal(response.Result, &msg)
-
-	if err != nil {
-		return Message{}, err
-	}
-
-	return msg, nil
+	return msg, err
 }

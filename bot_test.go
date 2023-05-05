@@ -27,6 +27,27 @@ func TestMain(m *testing.M) {
 	os.Exit(m.Run())
 }
 
+func TestForwardMessage(t *testing.T) {
+	data, err := os.ReadFile("chat-id.env")
+
+	chatID, _ := strconv.Atoi(string(data))
+
+	if err != nil {
+		t.Error("Test 'ForwardMessage' failed. Error:", err)
+	}
+
+	_, err = botApi.ForwardMessage(ForwardMessageConfig{
+		ChatID:              chatID,
+		FromChatID:          chatID,
+		MessageID:           10,
+		DisableNotification: true,
+	})
+
+	if err != nil {
+		t.Error("Test 'ForwardMessage' failed", err)
+	}
+}
+
 func TestGetUpdatesChannel(t *testing.T) {
 	_, err := botApi.GetUpdatesChannel(UpdatesConfig{Offset: 0})
 
@@ -44,10 +65,9 @@ func TestSendMessage(t *testing.T) {
 		t.Error("Test 'SendMessage' failed. Error:", err)
 	}
 
-	_, err = botApi.SendMessage(MessageConfig{
-		ChatID: chatID,
-		Text:   "Hello, world!",
-	})
+	msg := NewMessage(chatID, "Hello, world!")
+
+	_, err = botApi.SendMessage(msg)
 
 	if err != nil {
 		t.Error("Test 'SendMessage' failed", err)

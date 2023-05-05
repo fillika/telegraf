@@ -19,11 +19,25 @@ func (e ApiError) Error() string {
 	return e.Message
 }
 
+type ForwardMessageConfig struct {
+	ChatID              int  `json:"chat_id"`
+	FromChatID          int  `json:"from_chat_id"`
+	MessageID           int  `json:"message_id"`
+	MessageThreadID     bool `json:"message_thread_id,omitempty"`
+	DisableNotification bool `json:"disable_notification,omitempty"`
+	ProtectContent      bool `json:"protect_content,omitempty"`
+}
+
+func (fmc ForwardMessageConfig) prepareParams() ([]byte, error) {
+	bytes, err := json.Marshal(fmc)
+	return bytes, err
+}
+
 // https://core.telegram.org/bots/api#sendmessage
 type MessageConfig struct {
 	ChatID                   int             `json:"chat_id"`
-	MessageThreadId          int             `json:"message_thread_id,omitempty"`
 	Text                     string          `json:"text"`
+	MessageThreadId          int             `json:"message_thread_id,omitempty"`
 	ParseMode                string          `json:"parse_mode,omitempty"`
 	Entities                 []MessageEntity `json:"entities,omitempty"`
 	DisableWebPagePreview    bool            `json:"disable_web_page_preview,omitempty"`
@@ -32,6 +46,11 @@ type MessageConfig struct {
 	ReplyToMessageID         int             `json:"reply_to_message_id,omitempty"`
 	AllowSendingWithoutReply bool            `json:"allow_sending_without_reply,omitempty"`
 	// ReplyMarkup interface{} // todo create interface for markups
+}
+
+func (mc MessageConfig) prepareParams() ([]byte, error) {
+	bytes, err := json.Marshal(mc)
+	return bytes, err
 }
 
 // Update represents an incoming update.

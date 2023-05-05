@@ -36,6 +36,29 @@ func getMe(token string) (*BotAPI, error) {
 	}, nil
 }
 
+func prepareParamsAndMakeRequest(url string, params Config) (Message, error) {
+	bytes, err := params.prepareParams()
+
+	if err != nil {
+		return Message{}, err
+	}
+
+	response, err := makeRequest(url, bytes)
+
+	if err != nil {
+		return Message{}, err
+	}
+
+	var msg Message
+	err = json.Unmarshal(response.Result, &msg)
+
+	if err != nil {
+		return Message{}, err
+	}
+
+	return msg, nil
+}
+
 // this method make only POST requests
 func makeRequest(url string, jsonStr []byte) (response *ApiResponse, err error) {
 	ctx, cancel := context.WithTimeout(context.Background(), time.Second*10)
