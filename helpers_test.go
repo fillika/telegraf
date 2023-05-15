@@ -2,11 +2,8 @@ package telegraf
 
 import (
 	"fmt"
-	"os"
 	"testing"
 )
-
-var bot *BotAPI
 
 func Test_createUrlWithTokenAndMethod(t *testing.T) {
 	token := "x2222hsf"
@@ -17,21 +14,10 @@ func Test_createUrlWithTokenAndMethod(t *testing.T) {
 	}
 }
 
-func Test_getMe(t *testing.T) {
-	token, _ := os.ReadFile(".env")
-
-	var err error
-	bot, err = getMe(string(token))
-
-	if err != nil {
-		t.Error("Error while getting me")
-	}
-}
-
 func Test_getUpdates(t *testing.T) {
 	config := UpdatesConfig{Offset: 0}
 
-	_, err := getUpdates(bot, config)
+	_, err := getUpdates(botApi, config)
 
 	if err != nil {
 		t.Error("Error while getting updates")

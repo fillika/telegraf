@@ -8,7 +8,7 @@ import (
 
 type BotAPI struct {
 	token string
-	user  User
+	self  User
 }
 
 // To get updates we need to send request with config
@@ -55,6 +55,27 @@ func (b *BotAPI) GetUpdatesChannel(config UpdatesConfig) (chan *Update, error) {
 	}()
 
 	return updates, nil
+}
+
+func (b *BotAPI) GetMe() (*User, error) {
+	url := createUrlWithTokenAndMethod(b.token, methods.getMe)
+
+	apiResponse, err := makeRequest(url, []byte(""))
+
+	if err != nil {
+		return nil, err
+	}
+
+	var user User
+	err = json.Unmarshal(apiResponse.Result, &user)
+
+	if err != nil {
+		return nil, err
+	}
+
+	b.self = user
+
+	return &user, nil
 }
 
 // https://core.telegram.org/bots/api#copymessage

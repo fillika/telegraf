@@ -35,6 +35,14 @@ func TestMain(m *testing.M) {
 	os.Exit(m.Run())
 }
 
+func TestGetMe(t *testing.T) {
+	_, err := botApi.GetMe()
+
+	if err != nil {
+		t.Error("Test 'GetMe' failed", err)
+	}
+}
+
 func TestCopyMessage(t *testing.T) {
 	msg := NewCopyMessage(chatID, chatID, 11)
 	msg.DisableNotification = true

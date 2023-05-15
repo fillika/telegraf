@@ -14,28 +14,6 @@ func createUrlWithTokenAndMethod(token string, method string) string {
 	return url
 }
 
-func getMe(token string) (*BotAPI, error) {
-	url := createUrlWithTokenAndMethod(token, methods.getMe)
-
-	apiResponse, err := makeRequest(url, []byte(""))
-
-	if err != nil {
-		return &BotAPI{}, err
-	}
-
-	var user User
-	err = json.Unmarshal(apiResponse.Result, &user)
-
-	if err != nil {
-		return &BotAPI{}, err
-	}
-
-	return &BotAPI{
-		token: token,
-		user:  user,
-	}, nil
-}
-
 // this method make only POST requests
 func makeRequest(url string, jsonStr []byte) (response *ApiResponse, err error) {
 	ctx, cancel := context.WithTimeout(context.Background(), time.Second*10)

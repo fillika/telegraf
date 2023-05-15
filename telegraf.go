@@ -22,7 +22,11 @@ var methods = Methods{
 
 // This method create a BotAPI object.
 func NewBot(token string) (*BotAPI, error) {
-	bot, err := getMe(token)
+	bot := &BotAPI{
+		token: token,
+	}
+
+	_, err := bot.GetMe()
 
 	if err != nil {
 		return &BotAPI{}, err
