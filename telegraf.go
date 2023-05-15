@@ -11,6 +11,7 @@ type Methods struct {
 	getMe,
 	getUpdates,
 	logOut,
+	sendPhoto,
 	sendMessage string
 }
 
@@ -22,6 +23,7 @@ var methods = Methods{
 	getUpdates:     "getUpdates",
 	logOut:         "logOut",
 	sendMessage:    "sendMessage",
+	sendPhoto:    "sendPhoto",
 }
 
 // This method create a BotAPI object.
