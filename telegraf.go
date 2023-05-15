@@ -5,18 +5,22 @@ const (
 )
 
 type Methods struct {
-	getMe,
-	getUpdates,
+	close,
 	copyMessage,
 	forwardMessage,
+	getMe,
+	getUpdates,
+	logOut,
 	sendMessage string
 }
 
 var methods = Methods{
-	getMe:          "getMe",
-	getUpdates:     "getUpdates",
+	close:          "close",
 	copyMessage:    "copyMessage",
 	forwardMessage: "forwardMessage",
+	getMe:          "getMe",
+	getUpdates:     "getUpdates",
+	logOut:         "logOut",
 	sendMessage:    "sendMessage",
 }
 

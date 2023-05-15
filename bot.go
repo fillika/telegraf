@@ -94,6 +94,23 @@ func (b *BotAPI) ForwardMessage(config ForwardMessageConfig) (Message, error) {
 	return msg, err
 }
 
+// TODO: create 2 tests for methods LogOut and Close
+// https://core.telegram.org/bots/api#logout
+func (b *BotAPI) LogOut() (*ApiResponse, error) {
+	url := createUrlWithTokenAndMethod(b.token, methods.logOut)
+	response, err := makeRequest(url, []byte(""))
+
+	return response, err
+}
+
+// https://core.telegram.org/bots/api#close
+func (b *BotAPI) Close() (*ApiResponse, error) {
+	url := createUrlWithTokenAndMethod(b.token, methods.close)
+	response, err := makeRequest(url, []byte(""))
+
+	return response, err
+}
+
 // https://core.telegram.org/bots/api#sendmessage
 func (b *BotAPI) SendMessage(config MessageConfig) (Message, error) {
 	url := createUrlWithTokenAndMethod(b.token, methods.sendMessage)
