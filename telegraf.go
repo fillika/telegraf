@@ -23,7 +23,7 @@ var methods = Methods{
 	getUpdates:     "getUpdates",
 	logOut:         "logOut",
 	sendMessage:    "sendMessage",
-	sendPhoto:    "sendPhoto",
+	sendPhoto:      "sendPhoto",
 }
 
 // This method create a BotAPI object.

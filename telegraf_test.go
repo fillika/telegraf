@@ -29,10 +29,10 @@ func TestNewMessage(t *testing.T) {
 		t.Error("Test 'TestNewMessage' failed")
 	}
 
-	message.MessageThreadId = 42
+	message.MessageThreadID = 42
 	message.DisableNotification = true
 
-	if message.MessageThreadId != 42 || message.DisableNotification != true {
+	if message.MessageThreadID != 42 || message.DisableNotification != true {
 		t.Error("Test 'TestNewMessage' failed")
 	}
 }

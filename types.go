@@ -117,7 +117,7 @@ func (fmc *ForwardMessageConfig) makeRequest(url string) (Message, error) {
 type MessageConfig struct {
 	ChatID                   int             `json:"chat_id"`
 	Text                     string          `json:"text"`
-	MessageThreadId          int             `json:"message_thread_id,omitempty"`
+	MessageThreadID          int             `json:"message_thread_id,omitempty"`
 	ParseMode                string          `json:"parse_mode,omitempty"`
 	Entities                 []MessageEntity `json:"entities,omitempty"`
 	DisableWebPagePreview    bool            `json:"disable_web_page_preview,omitempty"`
